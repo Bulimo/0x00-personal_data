@@ -8,7 +8,7 @@ from typing import List, TypeVar
 
 
 class Auth:
-    """ 
+    """
     Class that defines basic authentication
     Methods:
       - require_auth()
