@@ -38,7 +38,7 @@ def request_unauthorized(error) -> str:
 
 @app.errorhandler(403)
 def request_forbidden(error) -> str:
-    """ 
+    """
     Request where the user is authenticated
     but not allowed to access to a resource
     """
