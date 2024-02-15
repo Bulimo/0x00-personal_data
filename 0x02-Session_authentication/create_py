@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+filename="$1"
+echo "#!/usr/bin/env python3" >> "$filename"
+chmod +x "$filename"

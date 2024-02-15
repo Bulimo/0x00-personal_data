@@ -1,0 +1,9 @@
+main*.py
+__pycache__/*
+api/__pycache__/*
+api/v1/__pycache__/*
+api/v1/auth/__pycache__/*
+api/v1/views/__pycache__/*
+models/__pycache__/*
+ec2f874b061bd3a2915949f081f4f5f055104f20.zip
+bauth/*
