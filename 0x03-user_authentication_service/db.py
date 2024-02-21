@@ -41,13 +41,11 @@ class DB:
         Returns:
             User object
         """
-        new_user = User(email=email, hashed_password=hashed_password)
-        try:
+        if email and hashed_password:
+            new_user = User(email=email, hashed_password=hashed_password)
             self._session.add(new_user)
             self._session.commit()
-        except Exception:
-            raise ValueError
-        return new_user
+            return new_user
 
     def find_user_by(self, **kwargs) -> User:
         """
