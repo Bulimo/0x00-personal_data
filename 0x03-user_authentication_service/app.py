@@ -3,8 +3,7 @@
 Module app
 Creates a simple flask app
 """
-from flask import Flask, jsonify, request, make_response
-from flask import abort, url_for, redirect
+from flask import Flask, jsonify, request, abort, url_for, redirect
 from auth import Auth
 
 app = Flask(__name__)
