@@ -3,7 +3,7 @@
 Module app
 Creates a simple flask app
 """
-from flask import Flask, jsonify, request, make_response, render_template
+from flask import Flask, jsonify, request, make_response
 from flask import abort, url_for, redirect
 from auth import Auth
 
@@ -21,36 +21,33 @@ def home() -> str:
 def users() -> str:
     """ end-point to register a user """
     try:
-        email = request.form['email']
-        password = request.form['password']
-        user = AUTH.register_user(email=email, password=password)
-        if user:
-            response_data = {
-                "email": email,
-                "message": "user created"
-            }
-            return jsonify(response_data), 200
-    except ValueError:
+        email = request.form.get('email')
+        password = request.form.get('password')
+        AUTH.register_user(email, password)
+        response_data = {
+            "email": email,
+            "message": "user created"
+        }
+        return jsonify(response_data), 200
+    except Exception as e:
         return jsonify({"message": "email already registered"}), 400
 
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login() -> str:
     """  Implements a login function """
-    email = request.form['email']
-    password = request.form['password']
-    if AUTH.valid_login(email=email, password=password):
-        session_id = AUTH.create_session(email=email)
-        resp = make_response(
-            jsonify({"email": email, "message": "logged in"})
-        )
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
+        resp = jsonify({"email": email, "message": "logged in"})
         resp.set_cookie('session_id', session_id)
         return resp
     abort(401)
 
 
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
-def logout() -> str:
+def logout():
     """
     implements a logout function
     Finds user with the requested session ID, destroy the session
@@ -82,13 +79,14 @@ def profile() -> str:
 @app.route('/reset_password', methods=['POST'], strict_slashes=False)
 def get_reset_password_token() -> str:
     """ Get reset password token generated """
-    email = request.form.get('email')
-    if email:
+    try:
+        email = request.form.get('email')
         reset_token = AUTH.get_reset_password_token(email)
         return jsonify(
             {"email": email, "reset_token": reset_token}
         )
-    abort(403)
+    except ValueError:
+        abort(403)
 
 
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
@@ -98,10 +96,10 @@ def update_password() -> str:
     reset_token = request.form.get('reset_token')
     new_password = request.form.get('new_password')
     try:
-        AUTH.update_password(reset_token=reset_token, password=new_password)
+        AUTH.update_password(reset_token, new_password)
         return jsonify(
             {"email": email, "message": "Password updated"}
-        )
+        ), 200
     except Exception:
         abort(403)
 

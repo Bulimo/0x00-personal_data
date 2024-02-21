@@ -52,7 +52,7 @@ class DB:
         found in the users table as filtered by the method’s input arguments
         """
         user = self._session.query(User).filter_by(**kwargs).first()
-        if user is None:
+        if not user:
             raise NoResultFound
         return user
 
